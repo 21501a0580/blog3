@@ -1,0 +1,121 @@
+##get request-- all users
+GET http://localhost:4000/usersapi/test-user
+
+### post request -- new users/user registration
+post http://localhost:4000/usersapi/register
+Content-Type: application/json
+
+{
+    "name":"Bharath",
+    "password":"Bharath",
+}
+
+### put request -- update user details
+put http://localhost:4000/usersapi/update-user
+Content-Type: application/json
+
+{
+    "id":400,
+    "name":"BSP",
+    "password":"BSP"
+}
+
+### delete request delete --users
+delete http://localhost:4000/usersapi/delete-user/400
+//----------------------------------------------------------------------
+### login request /user login
+post http://localhost:4000/usersapi/login
+Content-Type: application/json
+
+{
+    "id":400,
+    "name":"BSP",
+    "password":"BSP"
+}
+
+### get authentication for protected route/read all articles by user
+get http://localhost:4000/usersapi/articles
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQlNQIiwiaWF0IjoxNzExMDE0MTQ3LCJleHAiOjE3MTEwMTQxNzd9.rzlfy5FTba_ZojcNa4raK33fWHHIgpeXEde4LbNp1IU
+
+
+### get request ---------------------authors------------------------------
+GET http://localhost:4000/authorsapi/get-author
+
+
+### post request --new author/author registration
+post http://localhost:4000/authorsapi/register
+Content-Type: application/json
+
+{
+    "id":400,
+    "name":"KBHarath",
+    "password":"KBSP"
+}
+
+### delete request --delete author
+delete http://localhost:4000/authorsapi/delete-author/100
+
+### login request -login author/author login
+post http://localhost:4000/authorsapi/login
+Content-Type: application/json
+
+{
+    "id":400,
+    "name":"KBHarath",
+    "password":"BSP"
+}
+
+
+###add artircle by author /adding article by author
+post http://localhost:4000/authorsapi/article
+Content-Type: application/json
+
+{
+    "articleId":"{{$timestamp}}",
+    "title":"JavaScript basics by BSP",
+    "category":"programming",
+    "content":"RAndom text",
+    "dateOfCreation":"${{$datetime iso8601}}",
+    "dateOfModification":"${{$datetime iso8601}}",
+    "username":"BSP",
+    "comments":[],
+    "status":true
+}
+
+### put request to soft deletion of article/delete airticle by author
+put http://localhost:4000/authorsapi/articles/Bharath/1711048424
+Content-Type: application/json
+
+{
+    "status":false
+}
+
+### request-->to get  articles with name of author/read own article by author
+get http://localhost:4000/authorsapi/articles/Satya
+
+
+
+### update comments/comment by users
+put http://localhost:4000/usersapi/article/1711011469/comment
+Content-Type: application/json
+
+{
+    "name":"Bharath",
+    "comments":"new comment"
+}
+
+### /update articles by author/// not working
+put http://localhost:4000/authorsapi/article
+Content-Type: application/json
+
+{
+    "articleId":"1711048424",
+    "title":"JavaScript basics by BSP",
+    "category":"programming",
+    "content":"RAndom text CHANGed",
+    "dateOfCreation":"$2024-03-21T19:13:44.548Z",
+    "dateOfModification":"${{$datetime iso8601}}",
+    "username":"BSP",
+    "comments":[],
+    "status":true
+}
