@@ -5,37 +5,29 @@ const jwt =require('jsonwebtoken');
 const verifyToken = require('../verifytoken');
 
 let usersCollection;
-let articlesCollection
 //export default autorCollection;
 userApp.use((req,res,next)=>{
     usersCollection = req.app.get('usersCollection')
-    articlesCollection=req.app.get('articlesCollection')
     next();
 });
 
-
-userApp.get('/test-user',async(req,res)=>{
-    let usersList=await usersCollection.find().toArray();
-    res.send({message:"All users",payload:usersList});
-});
-
-
 userApp.post(('/register'),async(req,res)=>{
     let newUser=req.body;
-    let dbUser = await usersCollection.findOne({name:newUser.name})
+    newUser.status=true
+    newUser.inventory=[];
+    let dbUser = await usersCollection.findOne({username:newUser.username})
     if (dbUser !== null){
-        return res.send({message:"User already exists"})
+        return res.send({message:"Username already taken"})
     }  
     let hashedPassword=await bcryptjs.hash(newUser.password,6);
     newUser.password=hashedPassword;
     await usersCollection.insertOne(newUser);
-    res.send({message:"User created"})
+    res.send({message:"Signup Successfull"})
 });
 
-//login author
 userApp.post('/login',async(req,res)=>{
     const credObj = req.body;
-    let dbuser = await usersCollection.findOne({name:credObj.username})
+    let dbuser = await usersCollection.findOne({username:credObj.username})
     if(dbuser === null){
         res.send({message:"Invalid Username"})
     }
@@ -48,43 +40,29 @@ userApp.post('/login',async(req,res)=>{
         }
         else
         {
-            let signedToken=jwt.sign({name:dbuser.name},'abcdef',{expiresIn:30});
+            let signedToken=jwt.sign({username:dbuser.username},'abcdef',{expiresIn:30});
             res.send({message:"Login Successfull",token:signedToken,user:dbuser});
         }
     }
 })
 
-userApp.put('/update-user',async(req,res)=>{
+userApp.put('/update-inventory',async(req,res)=>{
     let modifiedUser=req.body;
+    let user=await usersCollection.findOne({username:modifiedUser.username})
+    if(user){
+    let newInventory=modifiedUser.inventory
     let newUser=await usersCollection.findOneAndUpdate(
-        {id:modifiedUser.id},
-        {$set:{...modifiedUser}},
+        {username:modifiedUser.username},
+        {$set:{inventory:newInventory}},
         {returnDocument:"after"});
-    res.send({message:"User Details Updated",payload:newUser});
+    res.send({message:"Inventory Updated",payload:newUser});
+    }
 });
 
-userApp.put('/article/:articleId/comment',async(req,res)=>{
-    let comment=req.body;
-    let newarticleId=req.params.articleId;
-    let modifiedArticle=await articlesCollection.findOneAndUpdate(
-        {articleId:newarticleId},
-        {$addToSet:{comments:comment}},
-        {returnDocument:"after"}
-    )
-    res.send({message:"comment updated",payload:modifiedArticle})
+userApp.get('/inventory/:username',async(req,res)=>{
+    let username=req.params.username;
+    let user=await  usersCollection.findOne({username:username})
+    res.send(user)
 })
-
-userApp.delete('/delete-user/:id',async(req,res)=>{
-    let id=Number(req.params.id);
-    await usersCollection.deleteOne({id:id});
-    res.send("User deleted");
-});
-
-userApp.get('/articles',verifyToken,async(req,res)=>{
-    let articleList=await articlesCollection.find().toArray();
-    res.send({message:"articles list",payload:articleList})
-})
-
-
 
 module.exports=userApp;

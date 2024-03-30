@@ -5,9 +5,6 @@ import { loginContext } from "../../contexts/LoginContextProvider";
 function Header() {
   const { currentUserDetails, setCurrentUserDetails } =
     useContext(loginContext);
-
-    console.log("header :", useContext(loginContext))
-
   function userLogout() {
     sessionStorage.removeItem("token");
     setCurrentUserDetails({
@@ -42,7 +39,7 @@ function Header() {
           <li className="nav-item">
             <NavLink className="nav-link text-white" to="signin" onClick={userLogout}>
               <span className="me-4">
-                Welcome,{currentUserDetails.currentUser.name}
+                Welcome,{currentUserDetails.currentUser.username}
               </span>
               Signout
             </NavLink>

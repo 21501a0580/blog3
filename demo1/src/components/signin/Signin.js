@@ -14,17 +14,10 @@ function Signin() {
   }
 
   useEffect(() => {
-    if (currentUserDetails.currentUser.role === "user") {
       if (currentUserDetails.userLoginStatus === true) {
         navigate("/user-profile");
       }
-    }
-    if (currentUserDetails.currentUser.role === "author") {
-      if (currentUserDetails.userLoginStatus === true) {
-        navigate("/author-profile");
-      }
-    }
-  }, [currentUserDetails.userLoginStatus,currentUserDetails.currentUser.role,navigate]);
+  }, [currentUserDetails.userLoginStatus,currentUserDetails,navigate]);
 
   return (
     <div>
@@ -36,34 +29,6 @@ function Signin() {
         className="w-50 bg-light p-3 m-auto mt-5"
         onSubmit={handleSubmit(onLogin)}
       >
-        {/* two radios for user role */}
-        <div className="mb-3">
-          <label>Register as</label>
-          <div className="form-check">
-            <input
-              type="radio"
-              {...register("role")}
-              id="user"
-              className="form-check-input"
-              value="user"
-            />
-            <label htmlFor="user" className="form-check-label">
-              User
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              type="radio"
-              {...register("role")}
-              id="author"
-              className="form-check-input"
-              value="author"
-            />
-            <label htmlFor="author" className="form-check-label">
-              Author
-            </label>
-          </div>
-        </div>
         {/* username */}
         <div className="mb-3">
           <label htmlFor="username" className="form-label">
